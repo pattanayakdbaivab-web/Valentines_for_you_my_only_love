@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For Cutieka ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Nunito:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- PERFORMANCE THEME --- */
+        :root {
+            --primary: #d6336c;   /* Deep Rose */
+            --primary-light: #ff87a3; 
+            --secondary: #ff99ac; /* Soft Blush */
+            --bg-color: #fff0f3;
+            --text-dark: #4a154b;
+            --card-bg: rgba(255, 255, 255, 0.96); 
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: 'Nunito', sans-serif;
+            color: var(--text-dark);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            background: linear-gradient(180deg, #fff0f3 0%, #ffe3e3 100%);
+        }
+
+        /* --- ENVELOPE INTRO --- */
+        #intro-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff0f3;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1s ease-out;
+        }
+
+        .envelope-container {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            background: #ff99ac;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-top: 110px solid #e64980;
+            transform-origin: top;
+            transition: transform 0.8s ease;
+            z-index: 5;
+        }
+
+        .paper {
+            position: absolute;
+            bottom: 10px;
+            width: 260px;
+            height: 160px;
+            background: white;
+            transition: transform 0.8s ease 0.4s;
+            z-index: 2;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.2rem;
+            color: var(--primary);
+        }
+
+        .seal {
+            position: absolute;
+            top: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 3rem;
+            color: white;
+            z-index: 6;
+            transition: opacity 0.4s;
+        }
+
+        .envelope-container.open .envelope-flap { transform: rotateX(180deg); z-index: 1; }
+        .envelope-container.open .paper { transform: translateY(-80px); z-index: 3; }
+        .envelope-container.open .seal { opacity: 0; }
+        
+        .tap-text { margin-top: 50px; font-size: 1.1rem; letter-spacing: 2px; text-transform: uppercase; color: #888; animation: pulse-text 3s infinite; }
+
+        /* --- MUSIC PLAYER --- */
+        .music-player {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 100;
+            cursor: pointer;
+            border: 2px solid var(--primary);
+            display: none;
+        }
+        .playing { animation: spin 5s linear infinite; }
+
+        /* --- HEADER --- */
+        header { 
+            height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            text-align: center; 
+            padding: 20px;
+        }
+        
+        .hero-name {
+            font-family: 'Great Vibes', cursive;
+            font-size: 4.8rem;
+            margin: 0;
+            line-height: 1;
+            background: -webkit-linear-gradient(45deg, #d6336c, #ff87a3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0; 
+            animation: fadeIn 2s ease 0.5s forwards;
+        }
+
+        .hero-heart {
+            font-size: 3rem;
+            margin: 15px 0;
+            display: block;
+            opacity: 0;
+            animation: fadeIn 2s ease 0.8s forwards, pulse 2s infinite;
+        }
+
+        .hero-subtitle { 
+            font-size: 1.1rem; 
+            color: #865c76; 
+            margin-top: 25px; 
+            letter-spacing: 3px; 
+            text-transform: uppercase;
+            font-weight: 700;
+            opacity: 0; 
+            animation: slideUp 1.5s ease 1.2s forwards; 
+        }
+        
+        /* --- SECTIONS --- */
+        section { padding: 40px 20px; max-width: 800px; margin: 0 auto; }
+        
+        .card { 
+            background: var(--card-bg); 
+            border-radius: 24px; 
+            padding: 30px 25px; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05); 
+            margin-bottom: 30px; 
+            border: 1px solid white;
+        }
+        
+        h2 { 
+            font-family: 'Great Vibes', cursive; 
+            font-size: 3rem; 
+            text-align: center; 
+            color: var(--primary); 
+            margin-bottom: 35px;
+        }
+
+        /* --- COUNTDOWN --- */
+        .timer-container {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            margin-top: 25px;
+        }
+        .time-box {
+            background: white;
+            border-radius: 16px;
+            padding: 12px;
+            width: 75px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border: 1px solid #ffe3e3;
+        }
+        .time-val {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--primary);
+            display: block;
+        }
+        .time-label {
+            font-size: 0.7rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+
+        /* --- CHAT SCROLLER --- */
+        .chat-scroller {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding-bottom: 25px;
+            width: 100%;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .chat-item {
+            flex: 0 0 auto;
+            width: 260px;
+            text-align: center;
+        }
+
+        .chat-img {
+            width: 100%;
+            height: 420px;
+            object-fit: contain;
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 5px solid white;
+        }
+
+        .chat-caption {
+            margin-top: 15px;
+            font-family: 'Great Vibes', cursive;
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
+
+        /* --- MAP & TIMELINE --- */
+        .map-container { display: flex; justify-content: space-between; align-items: center; color: var(--primary); padding: 25px 0; font-weight: 700; font-size: 1.1rem; }
+        .location-dot { width: 14px; height: 14px; background: var(--primary); border-radius: 50%; position: relative; }
+        .distance-line { flex-grow: 1; height: 2px; background: #ff99ac; margin: 0 15px; position: relative; }
+        .distance-line::after { content: '✈️'; position: absolute; top: -11px; left: 50%; transform: translateX(-50%); animation: fly 4s infinite alternate ease-in-out; font-size: 1.2rem; }
+
+        .timeline-item { position: relative; padding-left: 30px; margin-bottom: 40px; border-left: 3px solid var(--secondary); }
+        .timeline-item::before { content: '❤️'; position: absolute; left: -10px; top: 0; background: #fff0f3; font-size: 1rem; color: var(--primary); }
+        .date-badge { background: var(--secondary); color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; display: inline-block; margin-bottom: 8px; }
+
+        /* --- BUTTONS --- */
+        .big-btn { 
+            background: linear-gradient(135deg, #d6336c, #ff6b6b); 
+            color: white; 
+            border: none; 
+            padding: 18px 45px; 
+            font-size: 1.4rem; 
+            border-radius: 50px; 
+            cursor: pointer; 
+            box-shadow: 0 10px 20px rgba(214, 51, 108, 0.3); 
+            animation: pulse-btn 3s infinite; 
+            width: 100%;
+            transition: transform 0.2s;
+        }
+        .big-btn:active { transform: scale(0.97); }
+
+        .no-btn {
+            background: rgba(255, 255, 255, 0.4);
+            color: #aaa;
+            border: 1px solid #ccc;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        .nav-btn {
+            background: transparent;
+            color: var(--primary);
+            border: none;
+            padding: 12px;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        /* --- MODAL --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(74, 21, 75, 0.4); 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .modal-overlay.active { opacity: 1; pointer-events: all; }
+
+        .modal-box {
+            background: #fff;
+            padding: 45px 30px;
+            border-radius: 30px;
+            text-align: center;
+            width: 85%;
+            max-width: 380px;
+            transform: translateY(50px) scale(0.9);
+            transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            border: 4px solid #fff0f5;
+        }
+
+        .modal-overlay.active .modal-box { transform: translateY(0) scale(1); }
+        .modal-title { font-family: 'Great Vibes', cursive; font-size: 3.8rem; color: var(--primary); margin: 0; }
+
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes pulse { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(1.3); opacity: 0; } }
+        @keyframes fly { from { left: 15%; } to { left: 85%; } }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes pulse-btn { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
+        @keyframes pulse-text { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
+
+        .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+    </style>
+</head>
+<body>
+
+    <div id="intro-overlay" onclick="startExperience()">
+        <div class="envelope-container" id="envelope">
+            <div class="envelope-flap"></div>
+            <div class="paper">For Ishika</div>
+            <div class="seal">❤️</div>
+        </div>
+        <div class="tap-text">Tap to Open</div>
+    </div>
+
+    <div class="music-player" onclick="toggleMusic()">💿</div>
+    <audio id="bgMusic" loop>
+        <source src="song.mp3" type="audio/mpeg">
+    </audio>
+
+    <header>
+        <div>
+            <div class="hero-name">Baivuu</div>
+            <div class="hero-heart">❤️</div>
+            <div class="hero-name">Cutieka</div>
+        </div>
+        <div class="hero-subtitle">500km Apart • Connected by Heart</div>
+        <div style="position: absolute; bottom: 30px; font-size: 0.9rem; opacity: 0.6; animation: bounce 2s infinite;">Scroll Down ↓</div>
+    </header>
+
+    <section id="countdown-section"> 
+        <div class="card reveal">
+            <h3 style="text-align: center; margin: 0; color: #888; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px;">Countdown to 2 Years</h3>
+            <h2 style="margin: 10px 0 25px 0; font-size: 2.5rem;">Feb 17, 2026</h2>
+            
+            <div class="timer-container" id="countdown-box">
+                <div class="time-box">
+                    <span class="time-val" id="days">00</span>
+                    <span class="time-label">Days</span>
+                </div>
+                <div class="time-box">
+                    <span class="time-val" id="hours">00</span>
+                    <span class="time-label">Hrs</span>
+                </div>
+                <div class="time-box">
+                    <span class="time-val" id="minutes">00</span>
+                    <span class="time-label">Mins</span>
+                </div>
+                <div class="time-box">
+                    <span class="time-val" id="seconds">00</span>
+                    <span class="time-label">Secs</span>
+                </div>
+            </div>
+            <div id="anniversary-message" style="display:none; text-align: center; font-size: 2rem; color: var(--primary); font-family: 'Great Vibes', cursive;">
+                Happy 2nd Anniversary! 🎉
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="card reveal">
+            <h3 style="text-align: center; margin: 0 0 25px 0; color: #888; font-size: 1.1rem; text-transform: uppercase;">Distance is just a number</h3>
+            <div class="map-container">
+                <div style="text-align: center;">
+                    <div class="location-dot" style="margin: auto;"></div>
+                    <div style="font-size: 0.9rem; margin-top: 8px;">Patna</div>
+                </div>
+                <div class="distance-line"></div>
+                <div style="text-align: center;">
+                    <div class="location-dot" style="margin: auto;"></div>
+                    <div style="font-size: 0.9rem; margin-top: 8px;">Balasore</div>
+                </div>
+            </div>
+            <p style="text-align: center; font-style: italic; color: #666; margin-top: 25px; line-height: 1.6;">
+                "Even though I'm in Bihar and you're in Odisha, my heart is always right there with you."
+            </p>
+        </div>
+    </section>
+
+    <section>
+        <h2>Our Journey</h2>
+        <div class="timeline-item reveal">
+            <div class="date-badge">Sept 2023</div>
+            <h3>The Interhouse Dance</h3>
+            <p>The first time I saw you. I didn't know then that you would become my whole world.</p>
+        </div>
+        <div class="timeline-item reveal">
+            <div class="date-badge">Dec 2023</div>
+            <h3>Golden Jubilee</h3>
+            <p>Something changed that day. Amidst the celebration, I realized I had fallen for you.</p>
+        </div>
+        <div class="timeline-item reveal">
+            <div class="date-badge">Feb 17, 2024</div>
+            <h3>The Confession</h3>
+            <p>The day I gathered the courage to tell you. The best day of my life.</p>
+        </div>
+        <div class="timeline-item reveal">
+            <div class="date-badge">Oct 2025</div>
+            <h3>Last Seen</h3>
+            <p>The last time I saw your blushing smile in person. Counting the days until I see it again.</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>Why You?</h2>
+        <div class="card reveal">
+            <h3 style="color: var(--primary);">01. My Safe Place</h3>
+            <p>School was hard, but you were always helpful. You became one of the only people I could truly talk to. You are my peace.</p>
+        </div>
+        <div class="card reveal">
+            <h3 style="color: var(--primary);">02. Your Energy</h3>
+            <p>I love how extroverted and outgoing you are. You made my last days of school memorable in ways I never expected.</p>
+        </div>
+        <div class="card reveal">
+            <h3 style="color: var(--primary);">03. That Smile</h3>
+            <p>The way you smile when you blush... it makes me fall for you all over again, every single time.</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>Our Digital Love</h2>
+        <div class="card">
+            <p style="text-align: center; font-size: 0.9rem; color: #888; margin-bottom: 25px; letter-spacing: 1px;">
+                SWIPE TO SEE OUR MEMORIES &rarr;
+            </p>
+            <div class="chat-scroller">
+                
+                <div class="chat-item">
+                    <img src="chat1.jpg" class="chat-img" alt="Chat 1" onerror="this.src='https://placehold.co/250x400/ffb3c1/white?text=Add+Image+1'">
+                    <div class="chat-caption">First "I Love You"</div>
+                </div>
+
+                <div class="chat-item">
+                    <img src="chat2.jpg" class="chat-img" alt="Chat 2" onerror="this.src='https://placehold.co/250x400/ffb3c1/white?text=Add+Image+2'">
+                    <div class="chat-caption">The Time We Met</div>
+                </div>
+
+                <div class="chat-item">
+                    <img src="chat3.jpg" class="chat-img" alt="Chat 3" onerror="this.src='https://placehold.co/250x400/ffb3c1/white?text=Add+Image+3'">
+                    <div class="chat-caption">Heart to Heart</div>
+                </div>
+
+                <div class="chat-item">
+                    <img src="chat4.jpg" class="chat-img" alt="Chat 4" onerror="this.src='https://placehold.co/250x400/ffb3c1/white?text=Add+Image+4'">
+                    <div class="chat-caption">Birthday Love</div>
+                </div>
+
+                <div class="chat-item">
+                    <img src="chat5.jpg" class="chat-img" alt="Chat 5" onerror="this.src='https://placehold.co/250x400/ffb3c1/white?text=Add+Image+5'">
+                    <div class="chat-caption">Sweet Memories</div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section style="text-align: center; padding-bottom: 200px;">
+        <div class="reveal">
+            <button class="big-btn" onclick="openValentineModal()">One Last Thing...</button>
+        </div>
+    </section>
+
+    <div id="valentineModal" class="modal-overlay">
+        <div class="modal-box">
+            <h1 class="modal-title">Ishika...</h1>
+            <p style="font-size: 1.3rem; color: #555; margin: 25px 0; line-height: 1.5;">
+                There is only one question left to ask.
+            </p>
+            <h2 style="color: var(--primary); margin-bottom: 35px; font-size: 2.2rem;">Will you be my Valentine?</h2>
+            
+            <button class="big-btn" onclick="celebrate()">YES! ❤️</button>
+            <br>
+            <button class="no-btn" onclick="reject(this)">No</button>
+            <br>
+            <button class="nav-btn" onclick="goToCountdown()">See Countdown ⏳</button>
+        </div>
+    </div>
+
+    <script>
+        function startExperience() {
+            document.getElementById('envelope').classList.add('open');
+            var audio = document.getElementById("bgMusic");
+            audio.play().then(() => {
+                document.querySelector(".music-player").classList.add("playing");
+            }).catch(e => console.log("Audio waiting"));
+
+            setTimeout(() => {
+                document.getElementById("intro-overlay").style.opacity = "0";
+                setTimeout(() => {
+                    document.getElementById("intro-overlay").style.display = "none";
+                    document.querySelector(".music-player").style.display = "flex";
+                }, 1500);
+            }, 1200);
+        }
+
+        function toggleMusic() {
+            var audio = document.getElementById("bgMusic");
+            var btn = document.querySelector(".music-player");
+            if (audio.paused) {
+                audio.play();
+                btn.classList.add("playing");
+                btn.innerHTML = "💿";
+            } else {
+                audio.pause();
+                btn.classList.remove("playing");
+                btn.innerHTML = "🎵";
+            }
+        }
+
+        function openValentineModal() {
+            document.getElementById('valentineModal').classList.add('active');
+        }
+
+        function reject(btn) {
+            btn.innerText = "I still love you 🥺";
+            btn.style.color = "var(--primary)";
+            btn.style.borderColor = "var(--primary)";
+            btn.style.background = "white";
+            btn.onclick = null;
+        }
+
+        function goToCountdown() {
+            document.getElementById('valentineModal').classList.remove('active');
+            document.getElementById('countdown-section').scrollIntoView({behavior: 'smooth'});
+        }
+
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 50; 
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        reveal();
+
+        function celebrate() {
+            document.querySelector('#valentineModal .big-btn').innerText = "I Love You! 💖";
+            document.querySelector('.no-btn').style.display = 'none';
+
+            // REDUCED TO 30 HEARTS FOR BETTER PERFORMANCE
+            for(let i=0; i<30; i++) {
+                const heart = document.createElement('div');
+                heart.innerHTML = '❤️';
+                heart.style.position = 'fixed';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.top = '-10vh';
+                heart.style.fontSize = Math.random() * 25 + 10 + 'px';
+                heart.style.animation = `fall ${Math.random() * 2 + 3}s linear forwards`;
+                heart.style.zIndex = '100000'; 
+                document.body.appendChild(heart);
+            }
+            const style = document.createElement('style');
+            style.innerHTML = `@keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }`;
+            document.head.appendChild(style);
+        }
+
+        function updateCountdown() {
+            const anniversary = new Date("February 17, 2026 00:00:00").getTime();
+            const now = new Date().getTime();
+            const diff = anniversary - now;
+
+            if (diff < 0) {
+                document.getElementById("countdown-box").style.display = "none";
+                document.getElementById("anniversary-message").style.display = "block";
+                return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerText = days < 10 ? "0" + days : days;
+            document.getElementById("hours").innerText = hours < 10 ? "0" + hours : hours;
+            document.getElementById("minutes").innerText = minutes < 10 ? "0" + minutes : minutes;
+            document.getElementById("seconds").innerText = seconds < 10 ? "0" + seconds : seconds;
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+    </script>
+</body>
+</html>
